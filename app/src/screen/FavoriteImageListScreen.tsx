@@ -1,5 +1,5 @@
 import { StyleSheet, View } from "react-native";
-import { Typography } from "../components/Typography";
+import { Typography } from "../designsystem/Typography";
 
 const FavoriteImageListScreen = () => {
   return (

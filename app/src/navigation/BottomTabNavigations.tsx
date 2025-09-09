@@ -1,5 +1,5 @@
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import { TabIcon } from "../components/TabIcon";
+import { TabIcon } from "../designsystem/TabIcon";
 import FavoriteImageListScreen from "../screen/FavoriteImageListScreen";
 import ImageListScreen from "../screen/ImageListScreen";
 
@@ -10,14 +10,14 @@ const BottomTabNavigations = () => {
     <Tabs.Navigator
       screenOptions={(route) => ({
         headerShown: false,
-        tabBarIcon: ({ focused, size }) => {
+        tabBarIcon: ({ focused }) => {
           const iconName = getIconName(route.route.name);
-          const iconColor = focused ? "tomato" : "gray";
           return (
             <TabIcon
               name={iconName}
               focused={focused}
-              color={iconColor}
+              focusedColor={"tomato"}
+              color={"gray"}
               size={16}
             />
           );
