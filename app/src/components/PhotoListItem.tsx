@@ -1,14 +1,13 @@
-import { useCallback } from "react";
 import { useWindowDimensions } from "react-native";
 import { Button } from "../designsystem/Button";
 import { RemoteImage } from "../designsystem/RemoteImage";
 
-const PhotoListItem = ({ url }: { url: string }) => {
+interface PhotoListItemProps {
+  url: string;
+  onPressItem: () => void;
+}
+const PhotoListItem = ({ url, onPressItem }: PhotoListItemProps) => {
   const { width } = useWindowDimensions();
-
-  const onPressItem = useCallback(() => {
-    console.log("onPressItem");
-  }, []);
 
   return (
     <Button onPress={onPressItem} style={{ paddingHorizontal: 20, paddingVertical: 10 }}>
