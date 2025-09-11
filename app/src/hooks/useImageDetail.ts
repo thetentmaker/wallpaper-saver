@@ -3,27 +3,25 @@ import * as MediaLibrary from "expo-media-library";
 import { Alert } from "react-native";
 
 const useImageDetail = () => {
-  const onPressDownload = async (imageUrl: string) => {
-    downloadHandle(imageUrl);
-  };
-
-  const downloadHandle = async (imageUrl: string) => {
+  const onPressDownload = async (imageUrl: string) => handleDownload(imageUrl);
+  
+  const handleDownload = async (imageUrl: string) => {
     try {
-        // 1. 권한 확인 및 요청
-        const hasPermission = await requestMediaLibraryPermission();
-        if (!hasPermission) return;
-  
-        // 2. 이미지 다운로드
-        const fileUri = await downloadImageToFile(imageUrl);
-        if (!fileUri) return;
-  
-        // 3. 앨범에 저장
-        await MediaLibrary.saveToLibraryAsync(fileUri);
-        Alert.alert("이미지가 앨범에 저장되었습니다.");
-      } catch (error) {
-        console.log("다운로드 중 에러 발생:", error);
-        Alert.alert("이미지 저장 중 오류가 발생했습니다.");
-      }
+      // 1. 권한 확인 및 요청
+      const hasPermission = await requestMediaLibraryPermission();
+      if (!hasPermission) return;
+
+      // 2. 이미지 다운로드
+      const fileUri = await downloadImageToFile(imageUrl);
+      if (!fileUri) return;
+
+      // 3. 앨범에 저장
+      await MediaLibrary.saveToLibraryAsync(fileUri);
+      Alert.alert("이미지가 앨범에 저장되었습니다.");
+    } catch (error) {
+      console.log("다운로드 중 에러 발생:", error);
+      Alert.alert("이미지 저장 중 오류가 발생했습니다.");
+    }
   };
 
   const requestMediaLibraryPermission = async (): Promise<boolean> => {
@@ -47,7 +45,9 @@ const useImageDetail = () => {
     return true;
   };
 
-  const downloadImageToFile = async (imageUrl: string): Promise<string | null> => {
+  const downloadImageToFile = async (
+    imageUrl: string
+  ): Promise<string | null> => {
     const fileUri = FileSystem.documentDirectory! + Date.now() + ".jpg";
     try {
       const result = await FileSystem.downloadAsync(imageUrl, fileUri);
@@ -59,7 +59,6 @@ const useImageDetail = () => {
       return null;
     }
   };
-
 
   return {
     onPressDownload,
