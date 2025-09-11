@@ -1,19 +1,30 @@
 import * as FileSystem from "expo-file-system";
 import * as MediaLibrary from "expo-media-library";
+import { useState } from "react";
 import { Alert } from "react-native";
 
 const useImageDetail = () => {
+  const [isDownloading, setIsDownloading] = useState(false);
+
   const onPressDownload = async (imageUrl: string) => handleDownload(imageUrl);
 
   const handleDownload = async (imageUrl: string) => {
     try {
+      showLoading();
+
       // 1. 권한 확인 및 요청
       const hasPermission = await requestMediaLibraryPermission();
-      if (!hasPermission) return;
+      if (!hasPermission) {
+        hideLoading();
+        return;
+      }
 
       // 2. 이미지 다운로드
       const fileUri = await downloadImageToFile(imageUrl);
-      if (!fileUri) return;
+      if (!fileUri) {
+        hideLoading();
+        return;
+      }
 
       // 3. 앨범에 저장
       await MediaLibrary.saveToLibraryAsync(fileUri);
@@ -21,8 +32,13 @@ const useImageDetail = () => {
     } catch (error) {
       console.log("다운로드 중 에러 발생:", error);
       Alert.alert("이미지 저장 중 오류가 발생했습니다.");
+    } finally {
+      hideLoading();
     }
   };
+
+  const hideLoading = () => setIsDownloading(false);
+  const showLoading = () => setIsDownloading(true);
 
   const requestMediaLibraryPermission = async (): Promise<boolean> => {
     let permission = await MediaLibrary.getPermissionsAsync(true);
@@ -62,6 +78,7 @@ const useImageDetail = () => {
 
   return {
     onPressDownload,
+    isDownloading,
   };
 };
 

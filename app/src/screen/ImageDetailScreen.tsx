@@ -1,12 +1,15 @@
 import { useNavigation, useRoute } from "@react-navigation/native";
-import { StyleSheet, Text, useWindowDimensions, View } from "react-native";
+import {
+  StyleSheet,
+  useWindowDimensions,
+  View
+} from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { Button } from "../designsystem/Button";
 import { Header } from "../designsystem/Header";
-import { DownloadIcon } from "../designsystem/Icons";
 import { RemoteImage } from "../designsystem/RemoteImage";
 import useImageDetail from "../hooks/useImageDetail";
 import { RootStackNavigationProp } from "../navigation/\bRootStackNavigation";
+import DownloadButton from "./components/DownloadButton";
 
 const ImageDetailScreen = () => {
   const navigation = useNavigation<RootStackNavigationProp>();
@@ -14,7 +17,8 @@ const ImageDetailScreen = () => {
   const { imageUrl } = route.params as { imageUrl: string };
   const { width } = useWindowDimensions();
   const { bottom } = useSafeAreaInsets();
-  const { onPressDownload } = useImageDetail();
+  const { onPressDownload, isDownloading } = useImageDetail();
+  
   return (
     <View style={styles.container}>
       <Header>
@@ -22,17 +26,13 @@ const ImageDetailScreen = () => {
         <Header.Title>IMAGE DETAIL</Header.Title>
       </Header>
       <View style={styles.content}>
-        <RemoteImage
-          uri={imageUrl}
-          width={width * 0.98}
-          height={width * 1.5}
-        />
+        <RemoteImage uri={imageUrl} width={width * 0.98} height={width * 1.5} />
       </View>
-      {/* 하단 버튼의 하단 여백을 bottom 값으로 설정해줘 */}
-      <Button style={[styles.downloadButton, {bottom: bottom}]} onPress={() => onPressDownload(imageUrl)}>
-        <Text style={styles.downloadButtonText}>DOWNLOAD</Text>
-        <DownloadIcon size={20} color="#fff" style={styles.downloadButtonIcon} />
-      </Button>
+      <DownloadButton
+        isDownloading={isDownloading}
+        bottom={bottom}
+        onPress={() => onPressDownload(imageUrl)}
+      />
     </View>
   );
 };
@@ -46,21 +46,5 @@ const styles = StyleSheet.create({
   content: {
     flex: 1,
     alignItems: "center",
-  },
-  downloadButton: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "center",
-    width: "100%",
-    height: 50,
-    backgroundColor: "#000",
-  },
-  downloadButtonText: {
-    color: "#fff",
-    fontSize: 16,
-    fontWeight: "bold",
-  },
-  downloadButtonIcon: {
-    marginBottom: 10
   },
 });

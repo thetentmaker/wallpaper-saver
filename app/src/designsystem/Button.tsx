@@ -5,15 +5,17 @@ interface ButtonProps {
   children?: React.ReactNode;
   onPress: () => void;
   style?: StyleProp<ViewStyle>;
+  disabled?: boolean;
 }
 
 export const Button: React.FC<ButtonProps> = ({
   children,
   onPress,
+  disabled = false,
   style,
 }) => {
   return (
-    <Pressable onPress={onPress} style={[styles.button, style]}>
+    <Pressable disabled={disabled} onPress={onPress} style={[styles.button, style]}>
       {children}
     </Pressable>
   );
