@@ -5,14 +5,16 @@ import { Button } from "../designsystem/Button";
 import { Header } from "../designsystem/Header";
 import { DownloadIcon } from "../designsystem/Icons";
 import { RemoteImage } from "../designsystem/RemoteImage";
+import useImageDetail from "../hooks/useImageDetail";
 import { RootStackNavigationProp } from "../navigation/\bRootStackNavigation";
 
 const ImageDetailScreen = () => {
   const navigation = useNavigation<RootStackNavigationProp>();
   const route = useRoute();
-  const imageUrl = route.params as { imageUrl: string };
+  const { imageUrl } = route.params as { imageUrl: string };
   const { width } = useWindowDimensions();
   const { bottom } = useSafeAreaInsets();
+  const { onPressDownload } = useImageDetail();
   return (
     <View style={styles.container}>
       <Header>
@@ -21,13 +23,13 @@ const ImageDetailScreen = () => {
       </Header>
       <View style={styles.content}>
         <RemoteImage
-          uri={imageUrl.imageUrl}
+          uri={imageUrl}
           width={width * 0.98}
           height={width * 1.5}
         />
       </View>
       {/* 하단 버튼의 하단 여백을 bottom 값으로 설정해줘 */}
-      <Button style={[styles.downloadButton, {bottom: bottom}]} onPress={() => {}}>
+      <Button style={[styles.downloadButton, {bottom: bottom}]} onPress={() => onPressDownload(imageUrl)}>
         <Text style={styles.downloadButtonText}>DOWNLOAD</Text>
         <DownloadIcon size={20} color="#fff" style={styles.downloadButtonIcon} />
       </Button>
