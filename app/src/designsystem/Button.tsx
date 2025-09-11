@@ -1,11 +1,13 @@
-import React from 'react';
-import { Pressable, StyleProp, StyleSheet, ViewStyle } from 'react-native';
+import React from "react";
+import { Pressable, StyleProp, StyleSheet, ViewStyle } from "react-native";
 
 interface ButtonProps {
   children?: React.ReactNode;
   onPress: () => void;
   style?: StyleProp<ViewStyle>;
   disabled?: boolean;
+  onPressIn?: () => void;
+  onPressOut?: () => void;
 }
 
 export const Button: React.FC<ButtonProps> = ({
@@ -13,9 +15,17 @@ export const Button: React.FC<ButtonProps> = ({
   onPress,
   disabled = false,
   style,
+  onPressIn,
+  onPressOut,
 }) => {
   return (
-    <Pressable disabled={disabled} onPress={onPress} style={[styles.button, style]}>
+    <Pressable
+      disabled={disabled}
+      onPress={onPress}
+      style={[styles.button, style]}
+      onPressIn={onPressIn}
+      onPressOut={onPressOut}
+    >
       {children}
     </Pressable>
   );
