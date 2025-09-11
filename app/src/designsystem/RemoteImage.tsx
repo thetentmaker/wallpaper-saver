@@ -1,13 +1,14 @@
 import React, { useState } from 'react';
 import {
-    ActivityIndicator,
-    Image,
-    ImageStyle,
-    StyleSheet,
-    Text,
-    TouchableOpacity,
-    View,
-    ViewStyle,
+  ActivityIndicator,
+  Image,
+  ImageStyle,
+  StyleProp,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+  ViewStyle,
 } from 'react-native';
 
 interface RemoteImageProps {
@@ -101,9 +102,8 @@ export const RemoteImage: React.FC<RemoteImageProps> = ({
           source={{
             uri,
             cache,
-            priority,
           }}
-          style={imageStyles}
+          style={imageStyles as StyleProp<ImageStyle>}
           resizeMode={resizeMode}
           onLoad={handleLoad}
           onError={handleError}
@@ -122,7 +122,7 @@ export const RemoteImage: React.FC<RemoteImageProps> = ({
   if (onPress) {
     return (
       <TouchableOpacity
-        style={containerStyles}
+        style={containerStyles as StyleProp<ViewStyle>}
         onPress={onPress}
         activeOpacity={0.8}
       >
@@ -131,7 +131,7 @@ export const RemoteImage: React.FC<RemoteImageProps> = ({
     );
   }
 
-  return <View style={containerStyles}>{content}</View>;
+  return <View style={containerStyles as StyleProp<ViewStyle>}>{content}</View>;
 };
 
 const styles = StyleSheet.create({
