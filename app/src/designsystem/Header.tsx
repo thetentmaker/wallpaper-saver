@@ -1,3 +1,4 @@
+import { Ionicons } from "@expo/vector-icons";
 import React from "react";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -11,8 +12,10 @@ interface HeaderTitleProps {
 }
 
 interface HeaderIconProps {
-  name: string;
+  name: keyof typeof Ionicons.glyphMap;
   onPress?: () => void;
+  size?: number;
+  color?: string;
 }
 
 export const Header: React.FC<HeaderProps> & {
@@ -30,24 +33,15 @@ const HeaderTitle: React.FC<HeaderTitleProps> = ({ children }) => {
   return <Text style={styles.title}>{children}</Text>;
 };
 
-const HeaderIcon: React.FC<HeaderIconProps> = ({ name, onPress }) => {
-  const getIconSymbol = (iconName: string): string => {
-    const icons: { [key: string]: string } = {
-      'arrow-left': '←',
-      'arrow-right': '→',
-      'arrow-up': '↑',
-      'arrow-down': '↓',
-      'close': '×',
-      'menu': '☰',
-      'search': '🔍',
-      'settings': '⚙',
-    };
-    return icons[iconName] || '?';
-  };
-
+const HeaderIcon: React.FC<HeaderIconProps> = ({ 
+  name, 
+  onPress, 
+  size = 24, 
+  color = "#333" 
+}) => {
   return (
     <TouchableOpacity onPress={onPress} style={styles.iconButton}>
-      <Text style={styles.icon}>{getIconSymbol(name)}</Text>
+      <Ionicons name={name} size={size} color={color} />
     </TouchableOpacity>
   );
 };
@@ -75,10 +69,7 @@ const styles = StyleSheet.create({
     color: "#333",
   },
   iconButton: {
+    marginLeft: -5,
     marginRight: 8,
-  },
-  icon: {
-    fontSize: 20,
-    color: "#333",
   },
 });

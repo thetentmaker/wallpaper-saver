@@ -5,7 +5,7 @@ const ImageDetailScreen = () => {
 return (
     <View style={styles.container}>
       <Header>
-        <Header.Icon name="arrow-left" />
+        <Header.Icon name="arrow-back" />
         <Header.Title>IMAGE DETAIL</Header.Title>
       </Header>
     </View>
