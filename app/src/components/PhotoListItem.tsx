@@ -20,7 +20,7 @@ const PhotoListItem = ({ url, onPressItem }: PhotoListItemProps) => {
       duration: 200,
     }).start();
   };
-  
+
   const onPressOut = () => {
     Animated.timing(animValue, {
       toValue: 0,
@@ -29,7 +29,7 @@ const PhotoListItem = ({ url, onPressItem }: PhotoListItemProps) => {
     }).start();
   };
 
-  // animValue가 0일 때는 0.4, 1일 때는 1이 되도록 설정해줘.
+  // animValue가 0일 때는 1, 1일 때는 0.95
   const scaleAnimation = animValue.interpolate({
     inputRange: [0, 1],
     outputRange: [1, 0.95],
