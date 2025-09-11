@@ -4,7 +4,7 @@ import { Alert } from "react-native";
 
 const useImageDetail = () => {
   const onPressDownload = async (imageUrl: string) => handleDownload(imageUrl);
-  
+
   const handleDownload = async (imageUrl: string) => {
     try {
       // 1. 권한 확인 및 요청
