@@ -1,12 +1,13 @@
 import { StyleSheet, View } from "react-native";
-import { Typography } from "../designsystem/Typography";
+import { Header } from "../designsystem/Header";
 
 const ImageDetailScreen = () => {
 return (
     <View style={styles.container}>
-      <Typography weight="bold" variant="h1">
-        IMAGE DETAIL
-      </Typography>
+      <Header>
+        <Header.Icon name="arrow-left" />
+        <Header.Title>IMAGE DETAIL</Header.Title>
+      </Header>
     </View>
   );
 };
@@ -16,7 +17,5 @@ export default ImageDetailScreen;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
   },
 });

@@ -13,9 +13,7 @@ const ImageListScreen = () => {
   return (
     <View style={styles.container}>
       <Header>
-        <Header>
-          <Header.Title>IMAGE LIST</Header.Title>
-        </Header>
+        <Header.Title>IMAGE LIST</Header.Title>
       </Header>
       <FlatList
         data={IMAGE_LIST}
@@ -33,8 +31,6 @@ export default ImageListScreen;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
   },
   content: {
     flex: 1,
