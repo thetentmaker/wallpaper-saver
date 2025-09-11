@@ -1,23 +1,23 @@
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { TabIcon } from "../designsystem/TabIcon";
+import useBottomTabNavigations from "../hooks/useBottomTabNavigations";
 import FavoriteImageListScreen from "../screen/FavoriteImageListScreen";
 import ImageListScreen from "../screen/ImageListScreen";
 
 const Tabs = createBottomTabNavigator();
 
 const BottomTabNavigations = () => {
+  const { getIconName } = useBottomTabNavigations();
   return (
     <Tabs.Navigator
       screenOptions={(route) => ({
         headerShown: false,
         tabBarIcon: ({ focused }) => {
-          const iconName = getIconName(route.route.name);
           return (
             <TabIcon
-              name={iconName}
+              name={getIconName(route.route.name)}
               focused={focused}
               focusedColor={"tomato"}
-              color={"gray"}
               size={16}
             />
           );
@@ -31,17 +31,6 @@ const BottomTabNavigations = () => {
       />
     </Tabs.Navigator>
   );
-};
-
-const getIconName = (name: string): string => {
-  switch (name) {
-    case "ImageList":
-      return "home";
-    case "FavoriteImageList":
-      return "heart";
-    default:
-      return "";
-  }
 };
 
 export default BottomTabNavigations;

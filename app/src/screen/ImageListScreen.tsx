@@ -19,8 +19,9 @@ const ImageListScreen = () => {
       </Header>
       <FlatList
         data={IMAGE_LIST}
-        renderItem={({ item }) => (
-          <PhotoListItem url={item} onPressItem={() => onPressItem(item)} />
+        contentContainerStyle={{ paddingHorizontal: 20 }}
+        renderItem={({ item: url }) => (
+          <PhotoListItem url={url} onPressItem={onPressItem} />
         )}
       />
     </View>
