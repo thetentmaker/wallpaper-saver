@@ -6,7 +6,7 @@ import usePhotoListItem from "../hooks/usePhotoListItem";
 
 interface PhotoListItemProps {
   url: string;
-  onPressItem: (url: string) => void;
+  onPressItem?: (url: string) => void;
 }
 
 const PhotoListItem = ({ url, onPressItem }: PhotoListItemProps) => {
