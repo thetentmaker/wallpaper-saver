@@ -1,13 +1,11 @@
 import { FlatList, StyleSheet, View } from "react-native";
-import { useSelector } from "react-redux";
 import PhotoListItem from "../components/PhotoListItem";
 import { Header } from "../designsystem/Header";
 import { Typography } from "../designsystem/Typography";
-import { RootState } from "../store/store";
+import useFavoriteImageList from "../hooks/useFavoriteImageList";
 
 const FavoriteImageListScreen = () => {
-  const imageList = useSelector((state: RootState) => state.favorite.favorites);
-
+  const { imageList, onPressItem } = useFavoriteImageList();
   return (
     <View style={styles.container}>
       <Header>
@@ -21,7 +19,7 @@ const FavoriteImageListScreen = () => {
         <FlatList
           style={styles.flatList}
           data={imageList}
-          renderItem={({ item }) => <PhotoListItem url={item} />}
+          renderItem={({ item }) => <PhotoListItem url={item} onPressItem={onPressItem} />}
         />
       )}
     </View>

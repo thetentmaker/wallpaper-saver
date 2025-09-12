@@ -1,10 +1,27 @@
+import { useNavigation, useRoute } from "@react-navigation/native";
 import * as FileSystem from "expo-file-system";
 import * as MediaLibrary from "expo-media-library";
 import { useState } from "react";
-import { Alert } from "react-native";
+import { Alert, useWindowDimensions } from "react-native";
+import { useDispatch, useSelector } from "react-redux";
+import { onClickFavorite } from "../actions/favorite";
+import { RootStackNavigationProp } from "../navigation/\bRootStackNavigation";
+import { RootState } from "../store/store";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 const useImageDetail = () => {
+  const { bottom } = useSafeAreaInsets();
+  const { width } = useWindowDimensions();
+  const route = useRoute();
+  const { imageUrl } = route.params as { imageUrl: string };
+  const dispatch = useDispatch();
   const [isDownloading, setIsDownloading] = useState(false);
+  const navigation = useNavigation<RootStackNavigationProp>();
+  const isFavorite = useSelector((state: RootState) =>
+    state.favorite.favorites.includes(imageUrl)
+  );
+
+  const onPressFavorite = () => dispatch(onClickFavorite(imageUrl));
 
   const onPressDownload = async (imageUrl: string) => handleDownload(imageUrl);
 
@@ -76,9 +93,22 @@ const useImageDetail = () => {
     }
   };
 
+  const getIconName = () => isFavorite ? "heart" : "heart-outline";
+
+  const imageInfo = {
+    width: width * 0.98,
+    height: width * 1.5,
+    url: imageUrl,
+  }
   return {
     onPressDownload,
     isDownloading,
+    getIconName,
+    onPressFavorite,
+    imageUrl,
+    onPressBack: () => navigation.goBack(),
+    imageInfo,
+    bottom,
   };
 };
 
