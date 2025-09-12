@@ -1,16 +1,13 @@
 import { useNavigation, useRoute } from "@react-navigation/native";
-import {
-  StyleSheet,
-  useWindowDimensions,
-  View
-} from "react-native";
+import { StyleSheet, useWindowDimensions, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { onClickFavorite } from "../actions/favorite";
 import { Header } from "../designsystem/Header";
 import { RemoteImage } from "../designsystem/RemoteImage";
 import useImageDetail from "../hooks/useImageDetail";
 import { RootStackNavigationProp } from "../navigation/\bRootStackNavigation";
+import { RootState } from "../store/store";
 import DownloadButton from "./components/DownloadButton";
 
 const ImageDetailScreen = () => {
@@ -22,16 +19,21 @@ const ImageDetailScreen = () => {
   const { onPressDownload, isDownloading } = useImageDetail();
   const dispatch = useDispatch();
 
-  const onPressFavorite = () => {
-    dispatch(onClickFavorite(imageUrl));
-  };
+  const onPressFavorite = () => dispatch(onClickFavorite(imageUrl));
 
+  const isFavorite = useSelector((state: RootState) =>
+    state.favorite.favorites.includes(imageUrl)
+  );
+  
   return (
     <View style={styles.container}>
       <Header>
         <Header.Icon name="arrow-back" onPress={() => navigation.goBack()} />
         <Header.Title>IMAGE DETAIL</Header.Title>
-        <Header.Icon name="heart" onPress={onPressFavorite} />
+        <Header.Icon
+          name={isFavorite ? "heart" : "heart-outline"}
+          onPress={onPressFavorite}
+        />
       </Header>
       <View style={styles.content}>
         <RemoteImage uri={imageUrl} width={width * 0.98} height={width * 1.5} />
