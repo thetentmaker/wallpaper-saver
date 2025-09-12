@@ -131,7 +131,7 @@ yarn add redux react-redux @reduxjs/toolkit
 - react-redux: useDispatch, useSelector
 - @reduxjs/toolkit: configureStore(store)
 
-### 아키텍처 구조
+### Redux 구조
 
 ```
 src/
@@ -252,3 +252,125 @@ flowchart TD
    - 없으면 → `spread` 연산자로 추가
 7. **불변성 유지**: 새로운 객체 반환 `{...state, favorites: newFavorites}`
 8. **컴포넌트 업데이트**: `useSelector` 구독 컴포넌트들 자동 리렌더링
+
+## redux-persist
+
+### 개요
+Redux Persist는 Redux store의 상태를 로컬 스토리지(React Native에서는 AsyncStorage)에 자동으로 저장하고 복원하는 라이브러리입니다. 앱을 종료했다가 다시 실행해도 이전 상태가 그대로 유지됩니다.
+
+### 설치 및 설정
+
+```bash
+yarn add redux-persist @react-native-async-storage/async-storage
+```
+
+### 핵심 개념
+
+#### 1. PersistConfig
+```typescript
+const persistConfig = {
+  key: "root",           // AsyncStorage에 저장될 키
+  storage: AsyncStorage, // React Native의 AsyncStorage 사용
+};
+```
+
+#### 2. PersistReducer
+```typescript
+const rootReducer = combineReducers({
+  favorite: favoriteReducer,
+});
+
+const persistedReducer = persistReducer(persistConfig, rootReducer);
+```
+- 기존 reducer를 감싸서 persist 기능을 추가
+- 자동으로 상태 저장/복원 로직을 처리
+
+#### 3. PersistStore
+```typescript
+const persist = persistStore(store);
+```
+- 앱 시작 시 AsyncStorage에서 데이터를 읽어와 상태를 복원
+
+### 동작 원리
+
+#### 앱 시작 시 (REHYDRATE)
+1. `persistStore()` 호출
+2. AsyncStorage에서 `persist:root` 키로 저장된 데이터 조회
+3. 조회된 데이터로 `REHYDRATE` 액션 자동 dispatch
+4. `persistedReducer`가 이 액션을 받아 상태 복원
+5. 앱이 이전 상태로 복구됨
+
+#### 상태 변경 시 (PERSIST)
+1. 일반 액션으로 상태 변경
+2. `persistedReducer`가 자동으로 변경된 상태를 감지
+3. `PERSIST` 액션을 통해 AsyncStorage에 자동 저장
+4. 앱 종료 후에도 상태 유지
+
+### Store 설정 (store/store.ts)
+
+```typescript
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { combineReducers, configureStore } from "@reduxjs/toolkit";
+import { persistReducer, persistStore } from "redux-persist";
+
+// persist 설정
+const persistConfig = {
+  key: "root",
+  storage: AsyncStorage,
+};
+
+// 미들웨어를 사용하여 store에서 액션과 상태 변화를 로깅
+const loggerMiddleware = (storeAPI: any) => (next: any) => (action: any) => {
+  console.log("[store] dispatch 전 액션:", action);
+  const result = next(action);
+  console.log("[store] dispatch 후 상태:", storeAPI.getState());
+  return result;
+};
+
+// persistReducer로 rootReducer를 래핑
+const rootReducer = combineReducers({
+  favorite: favoriteReducer,
+});
+
+const persistedReducer = persistReducer(persistConfig, rootReducer);
+
+const store = configureStore({
+  reducer: persistedReducer,
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware({
+      serializableCheck: {
+        ignoredActions: ["persist/PERSIST", "persist/REHYDRATE"],
+      },
+    }).concat(loggerMiddleware),
+});
+
+const persist = persistStore(store);
+```
+
+### 실제 사용 예시
+
+#### 즐겨찾기 기능에서의 활용
+```typescript
+// 사용자가 하트 버튼 클릭
+dispatch(onClickFavorite(imageId));
+
+// 1. favoriteReducer에서 상태 변경
+// 2. persistedReducer가 자동으로 AsyncStorage에 저장
+// 3. 앱 종료 후 재시작해도 즐겨찾기 목록 유지
+```
+
+#### 컴포넌트에서 사용
+```typescript
+const FavoriteImageListScreen = () => {
+  // 앱 시작 시 자동으로 복원된 상태 사용
+  const { imageList } = useFavoriteImageList();
+  
+  return (
+    <View>
+      {imageList.map(item => (
+        <PhotoListItem key={item} url={item} />
+      ))}
+    </View>
+  );
+};
+```
