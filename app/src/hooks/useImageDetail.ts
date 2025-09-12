@@ -3,11 +3,11 @@ import * as FileSystem from "expo-file-system";
 import * as MediaLibrary from "expo-media-library";
 import { useState } from "react";
 import { Alert, useWindowDimensions } from "react-native";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useDispatch, useSelector } from "react-redux";
 import { onClickFavorite } from "../actions/favorite";
 import { RootStackNavigationProp } from "../navigation/\bRootStackNavigation";
 import { RootState } from "../store/store";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 const useImageDetail = () => {
   const { bottom } = useSafeAreaInsets();
@@ -17,11 +17,16 @@ const useImageDetail = () => {
   const dispatch = useDispatch();
   const [isDownloading, setIsDownloading] = useState(false);
   const navigation = useNavigation<RootStackNavigationProp>();
-  const isFavorite = useSelector((state: RootState) =>
-    state.favorite.favorites.includes(imageUrl)
-  );
+  const isFavorite = useSelector((state: RootState) => {
+    const result = state.favorite.favorites.includes(imageUrl);
+    console.log("[Redux hook] useSelector isFavorite:", result, "imageUrl:", imageUrl, "favorites:", state.favorite.favorites);
+    return result;
+  });
 
-  const onPressFavorite = () => dispatch(onClickFavorite(imageUrl));
+  const onPressFavorite = () => {
+    console.log("[Redux hook] useImageDetail onPressFavorite", imageUrl);
+    dispatch(onClickFavorite(imageUrl));
+  };
 
   const onPressDownload = async (imageUrl: string) => handleDownload(imageUrl);
 

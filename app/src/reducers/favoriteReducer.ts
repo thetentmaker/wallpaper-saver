@@ -38,6 +38,7 @@ const favoriteReducer = (state = initialState, action: FavoriteAction) => {
             ...state,
             favorites: favorites,
           };
+          console.log("[Redux reducer] favoriteReducer", returnState);
           return returnState;
         } else {
           // 즐겨찾기 목록에 없다면, 해당 아이템을 목록에 추가
@@ -46,6 +47,7 @@ const favoriteReducer = (state = initialState, action: FavoriteAction) => {
             ...state,
             favorites: [...state.favorites, action.clicked],
           };
+          console.log("[Redux reducer] favoriteReducer", returnState);
           return returnState;
         }
       }
