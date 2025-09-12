@@ -38,7 +38,7 @@ const PhotoListItem = ({ url, onPressItem }: PhotoListItemProps) => {
   return (
     <Button
       style={{ paddingVertical: 10, width: itemWidth, alignSelf: "center" }}
-      onPress={() => onPressItem(url)}
+      onPress={() => onPressItem?.(url)}
       onPressIn={onPressIn}
       onPressOut={onPressOut}
     >
