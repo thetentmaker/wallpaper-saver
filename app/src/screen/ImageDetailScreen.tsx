@@ -5,6 +5,8 @@ import {
   View
 } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { useDispatch } from "react-redux";
+import { onClickFavorite } from "../actions/favorite";
 import { Header } from "../designsystem/Header";
 import { RemoteImage } from "../designsystem/RemoteImage";
 import useImageDetail from "../hooks/useImageDetail";
@@ -18,12 +20,18 @@ const ImageDetailScreen = () => {
   const { width } = useWindowDimensions();
   const { bottom } = useSafeAreaInsets();
   const { onPressDownload, isDownloading } = useImageDetail();
-  
+  const dispatch = useDispatch();
+
+  const onPressFavorite = () => {
+    dispatch(onClickFavorite(imageUrl));
+  };
+
   return (
     <View style={styles.container}>
       <Header>
         <Header.Icon name="arrow-back" onPress={() => navigation.goBack()} />
         <Header.Title>IMAGE DETAIL</Header.Title>
+        <Header.Icon name="heart" onPress={onPressFavorite} />
       </Header>
       <View style={styles.content}>
         <RemoteImage uri={imageUrl} width={width * 0.98} height={width * 1.5} />
